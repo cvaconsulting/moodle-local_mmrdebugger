@@ -46,7 +46,7 @@ echo '<iframe src="user.php?id=' .$id. '" width="100%" height="400" name="uactio
 echo '<form id="userf" action="user.php" target="uactions" onsubmit="">
     <input type="text" size="40" name="command" id="command">
     <input type="hidden" name="id" value="'.$id.'">
-    <input type="hidden" name="type" value="">
+    <input type="hidden" name="type" value="command">
     ';
 
 echo html_writer::start_tag('img',  array('src' => $OUTPUT->pix_url('camera', 'local_mmrdebugger'),
@@ -54,7 +54,7 @@ echo html_writer::start_tag('img',  array('src' => $OUTPUT->pix_url('camera', 'l
                                           'id' => 'screenshotbutton'
                                           ));
 echo html_writer::start_tag('img',  array('src' => $OUTPUT->pix_url('phone', 'local_mmrdebugger'),
-                                          'alt' => get_string('remote'),
+                                          'alt' => get_string('streaming', 'local_mmrdebugger'),
                                           'id' => 'streampagebutton'
                                           ));
 echo '</form>';
@@ -62,7 +62,7 @@ echo '</form>';
 $jsmodule = array(
                 'name' => 'local_mmrdebugger',
                 'fullpath' => '/local/mmrdebugger/module.js',
-                'requires' => array("gallery-base64"));
+                'requires' => array("io", "gallery-base64"));
 
 $PAGE->requires->js_init_call('M.local_mmrdebugger.init', array(array('userid'=>$id)), false, $jsmodule);
 echo $OUTPUT->footer();

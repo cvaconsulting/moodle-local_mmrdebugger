@@ -43,5 +43,7 @@ echo $OUTPUT->header();
 
 echo html_writer::tag('iframe', '', array('id' => 'streamiframe', 'width' => '100%'));
 
+echo "<input type=\"button\" id=\"startinspection\" value=\"" . get_string('startinspection', 'local_mmrdebugger') . "\">";
+
 echo $OUTPUT->footer();
 

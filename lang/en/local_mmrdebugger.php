@@ -27,3 +27,5 @@ defined('MOODLE_INTERNAL') || die;
 $string['pluginname'] = 'MoodleMobile Remote Debugger';
 $string['cachedef_messages'] = 'MoodleMobile Remote Debugger messages';
 $string['noactiveusers'] = 'No active users. Remember that users must enable remote debugging in their Mobile Settings -> Development';
+$string['streaming'] = 'Streaming';
+$string['startinspection'] = 'Start inspection';

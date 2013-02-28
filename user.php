@@ -44,12 +44,6 @@ $PAGE->set_title(fullname($user));
 $PAGE->set_periodic_refresh_delay(5);
 echo $OUTPUT->header();
 
-echo '
-        <script language="javascript">
-            var newWin;
-        </script>
-    ';
-
 $cache = cache::make('local_mmrdebugger', 'messages');
 
 if ($command or $type) {
@@ -57,22 +51,31 @@ if ($command or $type) {
         $messages = array();
     }
     $idnumber = count($messages);
-    if($command) {
-        $messages[$idnumber] = array("id"=>$idnumber, "type" => "command", "text" => $command, "response" => "");
-    } else {
-        $messages[$idnumber] = array("id"=>$idnumber, "type" => $type, "text" => "", "response" => "");
-    }
+    $messages[$idnumber] = array("id"=>$idnumber, "type" => $type, "text" => $command, "response" => "");
+
     $cache->set($id, $messages);
 }
 
-// Security, active users allways has an element in cache
 if ($messages = $cache->get($id)) {
     $streaming = false;
     
     foreach (array_reverse($messages) as $message) {
-        echo "<div style=\"border: 1px solid red; padding: 4px; margin: 4px\"><p><b>".$message['type']." ".$message['text']."</b><br />";
-        if ($message['type'] == "screenshot" && $message['response']) {
-            echo html_writer::link($message['response'], get_string("view"), array('target' => '_blank'));
+        
+        if ($message['type'] == "inspector") {
+            continue;
+        }
+        
+        echo "<div style=\"border: 1px dotted black; padding: 4px; margin: 4px\">";
+        
+        if ($message['type'] == "command") {
+            echo "<p><b>".$message['type']." ".$message['text']."</b><br />";
+        }
+        
+        if ($message['type'] == "screenshot") { 
+            echo "<p><b>".$message['type']."</b><br />";
+            if ($message['response']) {
+                echo html_writer::link($message['response'], get_string("view"), array('target' => '_blank'));
+            }
         } else if ($message['type'] == "streampage" && $message['response'] && !$streaming) {
                 $streaming = true;
                 $response = json_decode($message['response']);

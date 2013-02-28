@@ -28,6 +28,7 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 
 $id      = required_param('id', PARAM_INT);
 $command = optional_param('command', '', PARAM_RAW);
+$type = optional_param('type', '', PARAM_STRINGID);
 
 $user = $DB->get_record('user', array('id'=>$id), '*', MUST_EXIST);
 
@@ -43,21 +44,49 @@ $PAGE->set_title(fullname($user));
 $PAGE->set_periodic_refresh_delay(5);
 echo $OUTPUT->header();
 
+echo '
+        <script language="javascript">
+            var newWin;
+        </script>
+    ';
+
 $cache = cache::make('local_mmrdebugger', 'messages');
 
-if ($command) {
+if ($command or $type) {
     if (!$messages = $cache->get($id)) {
         $messages = array();
     }
     $idnumber = count($messages);
-    $messages[$idnumber] = array("id"=>$idnumber, "type" => "command", "text" => $command, "response" => "");
+    if($command) {
+        $messages[$idnumber] = array("id"=>$idnumber, "type" => "command", "text" => $command, "response" => "");
+    } else {
+        $messages[$idnumber] = array("id"=>$idnumber, "type" => $type, "text" => "", "response" => "");
+    }
     $cache->set($id, $messages);
 }
 
 // Security, active users allways has an element in cache
 if ($messages = $cache->get($id)) {
+    $streaming = false;
+    
     foreach (array_reverse($messages) as $message) {
-        echo "<div style=\"border: 1px solid red; padding: 4px; margin: 4px\"><p><b>".$message['text']."</b><br />".$message['response']."</p></div>";
+        echo "<div style=\"border: 1px solid red; padding: 4px; margin: 4px\"><p><b>".$message['type']." ".$message['text']."</b><br />";
+        if ($message['type'] == "screenshot" && $message['response']) {
+            echo html_writer::link($message['response'], get_string("view"), array('target' => '_blank'));
+        } else if ($message['type'] == "streampage" && $message['response'] && !$streaming) {
+                $streaming = true;
+                $response = json_decode($message['response']);
+                echo '
+                    <script language="javascript">
+                        if (parent.M && parent.M.local_mmrdebugger) {
+                            parent.M.local_mmrdebugger.streamWindow('.json_encode($response->contents).','.$response->width.', '.$response->height.');
+                        }
+                    </script>
+                ';
+        } else if ($message['type'] != "streampage") {
+            echo format_text($message['response']);
+        }
+        echo "</p></div>";
     }
 }
 

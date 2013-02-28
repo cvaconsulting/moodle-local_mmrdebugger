@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Main file
+ * Publig messages hub
+ * A basic messages processor that stores the messages in the application cache
  *
  * @package   local_mmrdebugger
  * @copyright 2012 Juan Leyva <jleyva@cvaconsulting.com>
@@ -24,31 +25,23 @@
 
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->libdir . '/adminlib.php');
+
+$id      = required_param('id', PARAM_INT);
+
+$user = $DB->get_record('user', array('id'=>$id), '*', MUST_EXIST);
 
 require_login();
 require_capability('moodle/site:config', get_context_instance(CONTEXT_SYSTEM));
 
-admin_externalpage_setup('local_mmrdebugger', '', null);
+$url = new moodle_url('/local/mmrdebugger/stream.php', array('id'=>$id));
 
+$PAGE->set_context(get_context_instance(CONTEXT_SYSTEM));
+$PAGE->set_url($url);
+$PAGE->set_pagelayout('popup');
+$PAGE->set_title(fullname($user));
 echo $OUTPUT->header();
 
-$cache = cache::make('local_mmrdebugger', 'messages');
+echo html_writer::tag('iframe', '', array('id' => 'streamiframe', 'width' => '100%'));
 
-if ($users = $cache->get(0)) {
-    echo $OUTPUT->heading(get_string("users"));
-    echo $OUTPUT->container_start('info');
-    foreach($users as $userid){
-        if($user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0))){
-            $link = new moodle_url('/local/mmrdebugger/shell.php', array('id'=>$userid));
-            echo '<p>'.$OUTPUT->action_link($link, fullname($user), new popup_action('click', $link, 'user'.$userid, array('height' => 600, 'width' => 800))).'</p>';
-        }
-    }
-    echo $OUTPUT->container_end();
-
-} else {
-    echo get_string("noactiveusers", "local_mmrdebugger");
-}
-
-echo html_writer::link("", get_string("refresh"));
 echo $OUTPUT->footer();
+

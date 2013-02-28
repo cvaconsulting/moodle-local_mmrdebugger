@@ -42,11 +42,28 @@ $PAGE->set_title(fullname($user));
 $PAGE->set_heading(fullname($user));
 echo $OUTPUT->header();
 
-echo '<iframe src="user.php?id=' .$id. '" width="100%" height="400" name="uactions"></iframe>';
-echo '<form action="user.php" target="uactions" onsubmit="">
+echo '<iframe src="user.php?id=' .$id. '" width="100%" height="400" name="uactions" id="uactions"></iframe>';
+echo '<form id="userf" action="user.php" target="uactions" onsubmit="">
     <input type="text" size="40" name="command" id="command">
     <input type="hidden" name="id" value="'.$id.'">
-    </form>';
+    <input type="hidden" name="type" value="">
+    ';
 
+echo html_writer::start_tag('img',  array('src' => $OUTPUT->pix_url('camera', 'local_mmrdebugger'),
+                                          'alt' => get_string('screenshot'),
+                                          'id' => 'screenshotbutton'
+                                          ));
+echo html_writer::start_tag('img',  array('src' => $OUTPUT->pix_url('phone', 'local_mmrdebugger'),
+                                          'alt' => get_string('remote'),
+                                          'id' => 'streampagebutton'
+                                          ));
+echo '</form>';
+
+$jsmodule = array(
+                'name' => 'local_mmrdebugger',
+                'fullpath' => '/local/mmrdebugger/module.js',
+                'requires' => array("gallery-base64"));
+
+$PAGE->requires->js_init_call('M.local_mmrdebugger.init', array(array('userid'=>$id)), false, $jsmodule);
 echo $OUTPUT->footer();
 

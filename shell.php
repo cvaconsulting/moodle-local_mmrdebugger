@@ -44,9 +44,9 @@ echo $OUTPUT->header();
 
 echo '<iframe src="user.php?id=' .$id. '" width="100%" height="400" name="uactions"></iframe>';
 echo '<form action="user.php" target="uactions" onsubmit="">
-	<input type="text" size="40" name="command" id="command">
-	<input type="hidden" name="id" value="'.$id.'">
-	</form>';
+    <input type="text" size="40" name="command" id="command">
+    <input type="hidden" name="id" value="'.$id.'">
+    </form>';
 
 echo $OUTPUT->footer();
 

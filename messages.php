@@ -46,7 +46,7 @@ $cache = cache::make('local_mmrdebugger', 'messages');
 if (!$messages = $cache->get($userid)) {
     // We add this user as active
     if(!$activeusers = $cache->get(0)) {
-     $activeusers = array();
+        $activeusers = array();
     }
     $activeusers[] = $userid;
     $cache->set(0, array_unique($activeusers));
@@ -56,15 +56,13 @@ if (!$messages = $cache->get($userid)) {
 if ($action == 'get_messages') {
     $pendingmessages = array();
     foreach ($messages as $key=>$message) {
-	if (empty($message['response'])) {
-	    $pendingmessages[$key] = $message;
-	}
+        if (empty($message['response'])) {
+            $pendingmessages[$key] = $message;
+        }
     }
     echo json_encode($pendingmessages);
 } else if ($action == 'reply_message') {
-    $messages[$messageid]['response'] = $response; 
+    $messages[$messageid]['response'] = $response;
     $messages[$messageid]['type'] = $type;
-    $cache->set($userid, $messages); 
+    $cache->set($userid, $messages);
 }
-
-

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version of the plugin 
+ * Defines the version of the plugin
  *
  * @package   local_mmrdebugger
  * @copyright 2012 Juan Leyva <jleyva@cvaconsulting.com>

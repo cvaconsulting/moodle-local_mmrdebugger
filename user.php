@@ -46,19 +46,19 @@ echo $OUTPUT->header();
 $cache = cache::make('local_mmrdebugger', 'messages');
 
 if ($command) {
- if (!$messages = $cache->get($id)) {
-  $messages = array();
- }
- $idnumber = count($messages);
- $messages[$idnumber] = array("id"=>$idnumber, "type" => "command", "text" => $command, "response" => "");
- $cache->set($id, $messages);
+    if (!$messages = $cache->get($id)) {
+        $messages = array();
+    }
+    $idnumber = count($messages);
+    $messages[$idnumber] = array("id"=>$idnumber, "type" => "command", "text" => $command, "response" => "");
+    $cache->set($id, $messages);
 }
 
 // Security, active users allways has an element in cache
 if ($messages = $cache->get($id)) {
-	foreach (array_reverse($messages) as $message) {
-		echo "<div style=\"border: 1px solid red; padding: 4px; margin: 4px\"><p><b>".$message['text']."</b><br />".$message['response']."</p></div>";
-	}
+    foreach (array_reverse($messages) as $message) {
+        echo "<div style=\"border: 1px solid red; padding: 4px; margin: 4px\"><p><b>".$message['text']."</b><br />".$message['response']."</p></div>";
+    }
 }
 
 echo $OUTPUT->footer();

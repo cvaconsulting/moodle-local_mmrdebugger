@@ -15,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Publig messages hub
- * A basic messages processor that stores the messages in the application cache
+ * Main file
  *
  * @package   local_mmrdebugger
  * @copyright 2012 Juan Leyva <jleyva@cvaconsulting.com>
@@ -37,18 +36,19 @@ echo $OUTPUT->header();
 $cache = cache::make('local_mmrdebugger', 'messages');
 
 if ($users = $cache->get(0)) {
-	echo $OUTPUT->heading(get_string("users"));
-	echo $OUTPUT->container_start('info');
-	foreach($users as $userid){
-		if($user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0))){
-			$link = new moodle_url('/local/mmrdebugger/shell.php', array('id'=>$userid));
-			echo '<p>'.$OUTPUT->action_link($link, fullname($user), new popup_action('click', $link, 'user'.$userid, array('height' => 600, 'width' => 800))).'</p>';
-		}
-	}
-	echo $OUTPUT->container_end();
+    echo $OUTPUT->heading(get_string("users"));
+    echo $OUTPUT->container_start('info');
+    foreach($users as $userid){
+        if($user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0))){
+            $link = new moodle_url('/local/mmrdebugger/shell.php', array('id'=>$userid));
+            echo '<p>'.$OUTPUT->action_link($link, fullname($user), new popup_action('click', $link, 'user'.$userid, array('height' => 600, 'width' => 800))).'</p>';
+        }
+    }
+    echo $OUTPUT->container_end();
 
 } else {
-	echo get_string("noactiveusers", "local_mmrdebugger");
+    echo get_string("noactiveusers", "local_mmrdebugger");
+    
 }
 
 echo $OUTPUT->footer();

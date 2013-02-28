@@ -26,7 +26,7 @@ $definitions = array(
     'messages' => array(
         'mode' => cache_store::MODE_APPLICATION,
         'ttl'  => 900,
-	'requiredataguarantee' => true,
-	'persistent' => true
+    'requiredataguarantee' => true,
+    'persistent' => true
     )
 );
